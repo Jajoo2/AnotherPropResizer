@@ -15,7 +15,6 @@ function TOOL.BuildCPanel(panel)
 end
 
 local function resize(ent,scale) -- :(
-	if not ent:IsValid() and not ent:GetPhysicsObject():IsValid() then return end
 	ent:SetModelScale( scale, 0.000001 )
 	if SERVER then
 		ent:PhysicsInit(SOLID_VPHYSICS) -- Sketchy!
@@ -62,7 +61,7 @@ if CLIENT then
 	language.Add("tool.presizer.0", "Resize the prop you're looking at.")
 
 	hook.Add("OnEntityCreated", "mei_presizer_hook", function(ent)
-		if ent:IsValid() and ent:GetPhysicsObject():IsValid() then
+		if ent:IsValid() then
 			ent:SetNWVarProxy("mei_scale", function(ent, name, old, new)
 		        if new and new > 0 then
 		            resize(ent, new)

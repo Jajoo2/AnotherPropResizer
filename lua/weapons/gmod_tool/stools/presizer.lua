@@ -15,13 +15,18 @@ function TOOL.BuildCPanel(panel)
 end
 
 local function resize(ent,scale) -- :(
+	local size = ent:OBBMaxs() - ent:OBBMins()
+	if size:Length() > 500 then
+		return
+	end
 	ent:SetModelScale( scale, 0.000001 )
 	if SERVER then
 		ent:PhysicsInit(SOLID_VPHYSICS) -- Sketchy!
-		local physmat = ent:GetPhysicsObject():GetMaterial()
 		local phys = ent:GetPhysicsObject()
+		local physmat = phys:GetMaterial()
 		local oldMass = phys:GetMass()
 		local convexes = phys:GetMeshConvexes()
+		if #convexes[1] > 1000 then return end
 		local out = {}
 		for i, convex in ipairs(convexes) do
 		    out[i] = {}
@@ -40,6 +45,7 @@ local function resize(ent,scale) -- :(
 		local out = {}
 		ent:PhysicsInit(SOLID_VPHYSICS) -- Sketchy!
 		local convexes = ent:GetPhysicsObject():GetMeshConvexes()
+		if #convexes[1] > 1000 then return end
 		for i, convex in ipairs(convexes) do
 		    out[i] = {}
 		    for j, v in ipairs(convex) do

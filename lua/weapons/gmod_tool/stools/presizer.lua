@@ -76,11 +76,13 @@ function TOOL:LeftClick(trace)
     if CLIENT then return end
     if not IsFirstTimePredicted() then return end
     local ent = trace.Entity
-    local s = self:GetClientNumber("scale")
-    if s <= max:GetFloat() and s > 0 then
-	    ent:SetNWFloat("mei_scale", s)
-	    resize(ent, s)
-	    duplicator.StoreEntityModifier(ent, "meipropresizer", { scale = s })
+    if ent:IsValid() then
+	    local s = self:GetClientNumber("scale")
+	    if s <= max:GetFloat() and s > 0 then
+		    ent:SetNWFloat("mei_scale", s)
+		    resize(ent, s)
+		    duplicator.StoreEntityModifier(ent, "meipropresizer", { scale = s })
+	    end
     end
     return true
 end

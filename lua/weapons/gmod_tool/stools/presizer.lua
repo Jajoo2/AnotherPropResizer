@@ -15,7 +15,7 @@ function TOOL.BuildCPanel(panel)
 end
 
 local function resize(ent,scale) -- :(
-	
+	if not ent:IsValid() and not ent:GetPhysicsObject():IsValid() then return end
 	ent:SetModelScale( scale, 0.000001 )
 	if SERVER then
 		ent:PhysicsInit(SOLID_VPHYSICS) -- Sketchy!
@@ -62,12 +62,13 @@ if CLIENT then
 	language.Add("tool.presizer.0", "Resize the prop you're looking at.")
 
 	hook.Add("OnEntityCreated", "mei_presizer_hook", function(ent)
-		ent:SetNWVarProxy("mei_scale", function(ent, name, old, new)
-	        if new and new > 0 then
-	            resize(ent, new)
-	        end
-	    end)
-	    
+		if ent:IsValid() and ent:GetPhysicsObject():IsValid() then
+			ent:SetNWVarProxy("mei_scale", function(ent, name, old, new)
+		        if new and new > 0 then
+		            resize(ent, new)
+		        end
+		    end)
+	    end
 	end)
 
 end
@@ -76,7 +77,7 @@ function TOOL:LeftClick(trace)
     if CLIENT then return end
     if not IsFirstTimePredicted() then return end
     local ent = trace.Entity
-    if ent:IsValid() then
+    if ent:IsValid() and ent:GetPhysicsObject():IsValid() then
 	    local s = self:GetClientNumber("scale")
 	    if s <= max:GetFloat() and s > 0 then
 		    ent:SetNWFloat("mei_scale", s)
